@@ -39,6 +39,16 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    public void deleteProduct(Integer id) {
+        String sql = "delete from product where product_id=:productId";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("productId",id);
+
+        NP.update(sql,map);
+    }
+
+    @Override
     public Integer createProduct(ProductRequest productRequest) {
         String sql = "insert into product(product_name, category, " +
                 "image_url, price, stock, description, created_date, " +
