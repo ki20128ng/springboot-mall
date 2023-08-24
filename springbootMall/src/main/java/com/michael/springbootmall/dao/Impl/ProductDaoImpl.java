@@ -44,15 +44,7 @@ public class ProductDaoImpl implements ProductDao {
         String sql = "select count(*) from product where 1=1";
 
         Map<String, Object> map = new HashMap<>();
-        if(QueryParams.getCategory() != null){
-            sql = sql + " and category = :productCategory";
-            map.put("productCategory",QueryParams.getCategory());
-        }
-
-        if(QueryParams.getSearch() != null){
-            sql = sql + " and product_name like :search";
-            map.put("search","%"+QueryParams.getSearch()+"%");
-        }
+        addFilteringSql(sql,map,QueryParams);
 
         Integer total = NP.queryForObject(sql,map,Integer.class);
 
@@ -66,15 +58,7 @@ public class ProductDaoImpl implements ProductDao {
                 "from product where 1=1";
 
         Map<String, Object> map = new HashMap<>();
-        if(QueryParams.getCategory() != null){
-            sql = sql + " and category = :productCategory";
-            map.put("productCategory",QueryParams.getCategory());
-        }
-
-        if(QueryParams.getSearch() != null){
-            sql = sql + " and product_name like :search";
-            map.put("search","%"+QueryParams.getSearch()+"%");
-        }
+        addFilteringSql(sql,map,QueryParams);
 
         sql = sql + " order by " + QueryParams.getOrderBy() + " " + QueryParams.getSort();
         sql = sql + " LIMIT :limit OFFSET :offset";
@@ -85,6 +69,20 @@ public class ProductDaoImpl implements ProductDao {
 
         return productList;
 
+    }
+
+    private String addFilteringSql(String sql,Map<String,Object> map,ProductQueryParams QueryParams){
+        if(QueryParams.getCategory() != null){
+            sql = sql + " and category = :productCategory";
+            map.put("productCategory",QueryParams.getCategory());
+        }
+
+        if(QueryParams.getSearch() != null){
+            sql = sql + " and product_name like :search";
+            map.put("search","%"+QueryParams.getSearch()+"%");
+        }
+
+        return sql;
     }
 
     @Override
