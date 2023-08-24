@@ -1,6 +1,7 @@
 package com.michael.springbootmall.dao.Impl;
 
 import com.michael.springbootmall.dao.ProductDao;
+import com.michael.springbootmall.dto.ProductQueryParams;
 import com.michael.springbootmall.dto.ProductRequest;
 import com.michael.springbootmall.model.Product;
 import com.michael.springbootmall.rowmapper.ProductRowmapper;
@@ -39,15 +40,20 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> getProducts(String search) {
+    public List<Product> getProducts(ProductQueryParams QueryParams) {
         String sql = "select product_id,product_name, category, image_url, " +
                 "price, stock, description, created_date, last_modified_date " +
-                "from product";
+                "from product where 1=1";
 
         Map<String, Object> map = new HashMap<>();
-        if(search != null){
-            sql = sql + " where product_name like :search";
-            map.put("search","%"+search+"%");
+        if(QueryParams.getCategory() != null){
+            sql = sql + " and category = :productCategory";
+            map.put("productCategory",QueryParams.getCategory());
+        }
+
+        if(QueryParams.getSearch() != null){
+            sql = sql + " and product_name like :search";
+            map.put("search","%"+QueryParams.getSearch()+"%");
         }
 
 

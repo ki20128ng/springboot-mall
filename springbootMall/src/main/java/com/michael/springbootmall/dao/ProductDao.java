@@ -1,5 +1,6 @@
 package com.michael.springbootmall.dao;
 
+import com.michael.springbootmall.dto.ProductQueryParams;
 import com.michael.springbootmall.dto.ProductRequest;
 import com.michael.springbootmall.model.Product;
 
@@ -15,5 +16,5 @@ public interface ProductDao {
 
     void deleteProduct(Integer id);
 
-    List<Product> getProducts(String search);
+    List<Product> getProducts(ProductQueryParams QueryParams);
 }

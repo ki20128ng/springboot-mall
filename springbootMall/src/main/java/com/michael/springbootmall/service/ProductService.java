@@ -1,5 +1,6 @@
 package com.michael.springbootmall.service;
 
+import com.michael.springbootmall.dto.ProductQueryParams;
 import com.michael.springbootmall.dto.ProductRequest;
 import com.michael.springbootmall.model.Product;
 import org.springframework.stereotype.Component;
@@ -16,5 +17,5 @@ public interface ProductService {
 
     void deleteProduct(Integer id);
 
-    List<Product> getProducts(String search);
+    List<Product> getProducts(ProductQueryParams QueryParams);
 }
