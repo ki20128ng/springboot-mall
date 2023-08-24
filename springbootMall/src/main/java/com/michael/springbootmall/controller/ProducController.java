@@ -10,8 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.List;
 
+@Valid
 @RestController
 public class ProducController {
 
@@ -23,13 +26,17 @@ public class ProducController {
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String search,
             @RequestParam(defaultValue = "desc") String sort,
-            @RequestParam(defaultValue = "created_date") String orderBy
+            @RequestParam(defaultValue = "created_date") String orderBy,
+            @RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer limit,
+            @RequestParam(defaultValue = "0") @Min(0) Integer offset
     ){
         ProductQueryParams QueryParams = new ProductQueryParams();
         QueryParams.setCategory(category);
         QueryParams.setSearch(search);
         QueryParams.setSort(sort);
         QueryParams.setOrderBy(orderBy);
+        QueryParams.setLimit(limit);
+        QueryParams.setOffset(offset);
 
         List<Product> productList = productService.getProducts(QueryParams);
 

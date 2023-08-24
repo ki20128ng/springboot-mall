@@ -57,7 +57,9 @@ public class ProductDaoImpl implements ProductDao {
         }
 
         sql = sql + " order by " + QueryParams.getOrderBy() + " " + QueryParams.getSort();
-
+        sql = sql + " LIMIT :limit OFFSET :offset";
+        map.put("limit",QueryParams.getLimit());
+        map.put("offset",QueryParams.getOffset());
 
         List<Product> productList = NP.query(sql,map,new ProductRowmapper());
 
