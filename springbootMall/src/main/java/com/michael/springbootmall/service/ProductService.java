@@ -16,5 +16,5 @@ public interface ProductService {
 
     void deleteProduct(Integer id);
 
-    List<Product> getProducts();
+    List<Product> getProducts(String search);
 }

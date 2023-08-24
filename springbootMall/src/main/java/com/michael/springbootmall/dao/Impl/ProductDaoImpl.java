@@ -39,11 +39,18 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> getProducts() {
+    public List<Product> getProducts(String search) {
         String sql = "select product_id,product_name, category, image_url, " +
                 "price, stock, description, created_date, last_modified_date " +
                 "from product";
+
         Map<String, Object> map = new HashMap<>();
+        if(search != null){
+            sql = sql + " where product_name like :search";
+            map.put("search","%"+search+"%");
+        }
+
+
         List<Product> productList = NP.query(sql,map,new ProductRowmapper());
 
         return productList;
