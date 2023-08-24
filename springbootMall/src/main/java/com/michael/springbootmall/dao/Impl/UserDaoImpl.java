@@ -44,6 +44,23 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public User getUserByEmail(String email) {
+        String sql = "SELECT user_id,email,password,created_date,last_modified_date " +
+                "from user where email = :email";
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("email",email);
+
+        List<User> userList = NP.query(sql,map,new UserRowMapper());
+
+        if(userList.size()>0){
+            return userList.get(0);
+        }else {
+            return null;
+        }
+    }
+
+    @Override
     public User getUserById(Integer userId) {
         String sql = "SELECT user_id,email,password,created_date,last_modified_date " +
                 "from user where user_id = :userId";
