@@ -4,6 +4,7 @@ import com.michael.springbootmall.dto.ProductQueryParams;
 import com.michael.springbootmall.dto.ProductRequest;
 import com.michael.springbootmall.model.Product;
 import com.michael.springbootmall.service.ProductService;
+import com.michael.springbootmall.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class ProducController {
     private ProductService productService;
 
     @GetMapping("/products")
-    public  ResponseEntity<List<Product>> getProducts(
+    public  ResponseEntity<Page<Product>> getProducts(
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String search,
             @RequestParam(defaultValue = "desc") String sort,
@@ -40,7 +41,15 @@ public class ProducController {
 
         List<Product> productList = productService.getProducts(QueryParams);
 
-        return ResponseEntity.status(HttpStatus.OK).body(productList);
+        Integer total = productService.countProduct(QueryParams);
+
+        Page<Product> productPage = new Page<>();
+        productPage.setLimit(limit);
+        productPage.setOffset(offset);
+        productPage.setTotal(total);
+        productPage.setProduct(productList);
+
+        return ResponseEntity.status(HttpStatus.OK).body(productPage);
     }
 
 
