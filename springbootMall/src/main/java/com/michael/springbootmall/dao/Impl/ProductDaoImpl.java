@@ -144,4 +144,17 @@ public class ProductDaoImpl implements ProductDao {
 
         NP.update(sql,map);
     }
+
+    @Override
+    public void updateStock(Integer productId, Integer stock) {
+        String sql = "Update product set stock = :stock,last_modified_date=:lastModifiedDate " +
+                "where product_id = :productId";
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("stock",stock);
+        map.put("productId",productId);
+        map.put("lastModifiedDate",new Date());
+
+        NP.update(sql,map);
+    }
 }
