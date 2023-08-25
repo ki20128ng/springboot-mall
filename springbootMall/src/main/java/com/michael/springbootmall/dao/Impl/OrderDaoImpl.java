@@ -2,6 +2,8 @@ package com.michael.springbootmall.dao.Impl;
 
 import com.michael.springbootmall.dao.OrderDao;
 import com.michael.springbootmall.dto.BuyItem;
+import com.michael.springbootmall.dto.OrderQueryParms;
+import com.michael.springbootmall.dto.ProductQueryParams;
 import com.michael.springbootmall.model.Order;
 import com.michael.springbootmall.model.OrderItem;
 import com.michael.springbootmall.rowmapper.OrderItemRowMapper;
@@ -93,5 +95,47 @@ public class OrderDaoImpl implements OrderDao {
         List<OrderItem> orderItemList = NP.query(sql,map,new OrderItemRowMapper());
 
         return orderItemList;
+    }
+
+    @Override
+    public List<Order> getOrders(OrderQueryParms orderQueryParms) {
+        String sql = "select order_id,user_id, total_amount, created_date, last_modified_date " +
+                "from `order` where 1=1";
+
+        Map<String,Object> map = new HashMap<>();
+
+        sql = addFilteringSql(sql,map,orderQueryParms);
+
+        //排序
+        sql = sql + " Order by created_date desc";
+        //分頁
+        sql = sql + " Limit :limit offset :offset";
+        map.put("limit",orderQueryParms.getLimit());
+        map.put("offset",orderQueryParms.getOffset());
+
+        List<Order> orderList = NP.query(sql,map,new OrderRowMapper());
+        return orderList;
+
+    }
+
+    @Override
+    public Integer countOrder(OrderQueryParms orderQueryParms) {
+        String sql = "select count(*) from `order` where 1=1";
+        Map<String,Object> map = new HashMap<>();
+
+        sql = addFilteringSql(sql,map,orderQueryParms);
+
+        Integer total = NP.queryForObject(sql,map, Integer.class);
+        return total;
+
+    }
+
+    private String addFilteringSql(String sql, Map<String,Object> map, OrderQueryParms orderQueryParms){
+        if(orderQueryParms.getUserId() != null){
+            sql = sql + " and user_id = :userId";
+            map.put("userId",orderQueryParms.getUserId());
+        }
+
+        return sql;
     }
 }
